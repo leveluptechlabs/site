@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LevelUp Tech Labs | Unity 3D • AR/VR/MR Development & Training</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366F1;
+            --secondary: #EC4899;
+            --accent: #F59E0B;
+            --purple: #A855F7;
+            --green: #10B981;
+            --orange: #F97316;
+            --blue: #3B82F6;
+            --cyan: #06B6D4;
+            --dark: #0F172A;
+            --light: #F8FAFC;
+            --white: #FFFFFF;
+            --gray: #64748B;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: var(--light);
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0.05;
+        }
+
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .animated-bg::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -150px;
+            left: -150px;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-cta {
+            padding: 0.75rem 1.75rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 140px 2rem 100px;
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-weight: 600;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Hero Visual - CSS Art */
+        .hero-visual {
+            position: relative;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-card {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            border-radius: 30px;
+            position: relative;
+            transform: rotate(-5deg);
+            box-shadow: 0 30px 80px rgba(99, 102, 241, 0.4);
+            overflow: hidden;
+            animation: cardFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: rotate(-5deg) translateY(0); }
+            50% { transform: rotate(-5deg) translateY(-20px); }
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.05) 10px,
+                rgba(255, 255, 255, 0.05) 20px
+            );
+            animation: patternMove 20s linear infinite;
+        }
+
+        @keyframes patternMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .hero-card-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8rem;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+        }
+
+        .floating-badge {
+            position: absolute;
+            padding: 1rem 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            font-weight: 600;
+            animation: badgeFloat 4s ease-in-out infinite;
+        }
+
+        .badge-1 {
+            top: 10%;
+            right: 5%;
+            background: linear-gradient(135deg, var(--green), var(--cyan));
+            color: white;
+        }
+
+        .badge-2 {
+            bottom: 15%;
+            left: 0;
+            background: linear-gradient(135deg, var(--orange), var(--accent));
+            color: white;
+        }
+
+        @keyframes badgeFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Stats Section */
+        .stats {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 50%, var(--secondary) 100%);
+            padding: 4rem 2rem;
+            margin: 4rem 0;
+        }
+
+        .stats-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Section */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.15rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .service-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .service-card:nth-child(1) { --card-color: var(--primary); }
+        .service-card:nth-child(2) { --card-color: var(--secondary); }
+        .service-card:nth-child(3) { --card-color: var(--green); }
+        .service-card:nth-child(4) { --card-color: var(--orange); }
+        .service-card:nth-child(5) { --card-color: var(--purple); }
+        .service-card:nth-child(6) { --card-color: var(--cyan); }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--card-color), var(--secondary));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+            transition: all 0.4s;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .service-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .service-card p {
+            color: var(--gray);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            padding: 0.4rem 1rem;
+            background: var(--light);
+            color: var(--gray);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Portfolio Grid */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+        }
+
+        .portfolio-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s;
+            cursor: pointer;
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .portfolio-visual {
+            height: 280px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portfolio-card:nth-child(1) .portfolio-visual {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .portfolio-card:nth-child(2) .portfolio-visual {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .portfolio-card:nth-child(3) .portfolio-visual {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .portfolio-card:nth-child(4) .portfolio-visual {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .portfolio-card:nth-child(5) .portfolio-visual {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .portfolio-card:nth-child(6) .portfolio-visual {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+
+        .portfolio-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.2) 2px, transparent 2px),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.2) 2px, transparent 2px),
+                radial-gradient(circle at 40% 20%, rgba(255,255,255,0.2) 2px, transparent 2px);
+            background-size: 50px 50px;
+            animation: patternMove 20s linear infinite;
+        }
+
+        .portfolio-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6rem;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+        }
+
+        .portfolio-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 0.6rem 1.2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--dark);
+        }
+
+        .portfolio-content {
+            padding: 2rem;
+        }
+
+        .portfolio-content h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+        }
+
+        .portfolio-content p {
+            color: var(--gray);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .portfolio-meta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        /* About Section */
+        .about-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .about-visual {
+            position: relative;
+            height: 500px;
+        }
+
+        .about-shape {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--cyan) 0%, var(--primary) 50%, var(--purple) 100%);
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(99, 102, 241, 0.3);
+        }
+
+        .about-shape::before {
+            content: '👨‍💻';
+            position: absolute;
+            font-size: 10rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+        }
+
+        .about-content h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-content p {
+            color: var(--gray);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .expertise-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .expertise-item {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--light), white);
+            border-radius: 15px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .expertise-item h4 {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .expertise-item p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Contact Section */
+        .contact-wrapper {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 50%, var(--secondary) 100%);
+            border-radius: 30px;
+            padding: 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 4rem;
+            box-shadow: 0 30px 80px rgba(99, 102, 241, 0.3);
+        }
+
+        .contact-info {
+            color: white;
+        }
+
+        .contact-info h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info p {
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            line-height: 1.7;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .contact-details h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            opacity: 0.9;
+        }
+
+        .contact-details p {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--light);
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            padding: 5px;
+            background: none;
+            border: none;
+            z-index: 1100;
+        }
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(255,255,255,0.98);
+            z-index: 999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+        }
+        .mobile-menu.open { display: flex; }
+        .mobile-menu a {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .mobile-menu a:hover { color: var(--primary); }
+        .mobile-menu .nav-cta { padding: 0.75rem 2rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white !important; border-radius: 50px; }
+
+        @media (max-width: 1024px) {
+            .hero, .about-container, .contact-wrapper { grid-template-columns: 1fr; gap: 3rem; }
+            .hero { text-align: center; }
+            .hero-buttons { justify-content: center; }
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-container { grid-template-columns: repeat(2, 1fr); }
+            .hero-visual { display: none; }
+            .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .hero { padding: 120px 1rem 60px; text-align: center; }
+            .hero-content h1 { font-size: 2.2rem; line-height: 1.2; }
+            .hero-content p { font-size: 1rem; }
+            .hero-buttons { justify-content: center; flex-direction: column; align-items: center; }
+            .btn { width: 100%; max-width: 300px; text-align: center; }
+            .stats { padding: 3rem 1rem; }
+            .stats-container { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+            .stat-item h3 { font-size: 2.5rem; }
+            section { padding: 4rem 1rem; }
+            .section-title { font-size: 1.8rem; }
+            .services-grid { grid-template-columns: 1fr; }
+            .portfolio-grid { grid-template-columns: 1fr; }
+            .contact-wrapper { grid-template-columns: 1fr; padding: 2rem 1.5rem; gap: 2rem; }
+            .contact-form { padding: 1.5rem; }
+            .about-container { grid-template-columns: 1fr; gap: 2rem; }
+            .about-visual { height: 250px; }
+            .expertise-grid { grid-template-columns: 1fr; }
+            .nav-container { padding: 1rem 1.5rem; }
+        }
+        @media (max-width: 480px) {
+            .hero-content h1 { font-size: 1.8rem; }
+            .section-title { font-size: 1.5rem; }
+            .stat-item h3 { font-size: 2rem; }
+            .service-card { padding: 1.5rem; }
+            .contact-wrapper { padding: 1.5rem 1rem; }
+            .portfolio-visual { height: 200px; }
+            .logo { font-size: 1.2rem; }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 9999;
+            padding: 1.2rem 2rem;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateX(150%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 380px;
+        }
+        .toast.show { transform: translateX(0); }
+        .toast.success { background: linear-gradient(135deg, #10B981, #059669); }
+        .toast.error { background: linear-gradient(135deg, #EF4444, #DC2626); }
+        .toast-icon { font-size: 1.4rem; }
+        .toast-text { line-height: 1.4; }
+        @media (max-width: 480px) {
+            .toast { top: 15px; right: 15px; left: 15px; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">LevelUp Tech Labs</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact" class="nav-cta">Get Started</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#home" class="mobile-link">Home</a>
+        <a href="#services" class="mobile-link">Services</a>
+        <a href="#portfolio" class="mobile-link">Portfolio</a>
+        <a href="#about" class="mobile-link">About</a>
+        <a href="#contact" class="mobile-link nav-cta">Get Started</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Transform Ideas Into Interactive Reality</h1>
+            <p>
+                We build world-class Unity 3D games, immersive AR/VR/MR experiences, and deliver 
+                professional training that empowers the next generation of developers.
+            </p>
+            <div class="hero-buttons">
+                <a href="#services" class="btn btn-primary">Explore Services</a>
+                <a href="#portfolio" class="btn btn-secondary">View Portfolio</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-card">
+                <div class="hero-card-icon">🎮</div>
+            </div>
+            <div class="floating-badge badge-1">Unity 3D Expert</div>
+            <div class="floating-badge badge-2">AR/VR Pioneer</div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <div class="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <h3>10+</h3>
+                <p>Years Experience</p>
+            </div>
+            <div class="stat-item">
+                <h3>150+</h3>
+                <p>Projects Completed</p>
+            </div>
+            <div class="stat-item">
+                <h3>75+</h3>
+                <p>Happy Clients</p>
+            </div>
+            <div class="stat-item">
+                <h3>98%</h3>
+                <p>Success Rate</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services Section -->
+    <section id="services">
+        <div class="section-header fade-in">
+            <span class="section-badge">What We Offer</span>
+            <h2 class="section-title">Our Services</h2>
+            <p class="section-subtitle">
+                End-to-end development solutions that bring your vision to life
+            </p>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card fade-in">
+                <div class="service-icon">🎮</div>
+                <h3>Game Development</h3>
+                <p>
+                    Stunning 2D/3D games built with Unity 3D. From mobile hits to PC masterpieces, 
+                    we create engaging experiences that players love.
+                </p>
+                <div class="service-tags">
+                    <span class="tag">Unity 3D</span>
+                    <span class="tag">C# Scripting</span>
+                    <span class="tag">Multiplayer</span>
+                    <span class="tag">Cross-Platform</span>
+                </div>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">🥽</div>
+                <h3>AR/VR/MR Solutions</h3>
+                <p>
+                    Immersive XR experiences for training, marketing, and entertainment. 
+                    ARFoundation, Vuforia, Meta Quest, HoloLens — we do it all.
+                </p>
+                <div class="service-tags">
+                    <span class="tag">ARCore/ARKit</span>
+                    <span class="tag">Meta Quest</span>
+                    <span class="tag">HoloLens</span>
+                    <span class="tag">Spatial Computing</span>
+                </div>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">🎓</div>
+                <h3>Professional Training</h3>
+                <p>
+                    Hands-on Unity 3D and AR/VR courses with real projects, expert mentorship, 
+                    and career support. Build your portfolio while you learn.
+                </p>
+                <div class="service-tags">
+                    <span class="tag">Live Classes</span>
+                    <span class="tag">Certification</span>
+                    <span class="tag">Projects</span>
+                    <span class="tag">Job Ready</span>
+                </div>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">🏫</div>
+                <h3>College Lab Setup</h3>
+                <p>
+                    Complete lab infrastructure for institutions. Hardware, software, curriculum, 
+                    and faculty training — everything you need to start teaching game dev.
+                </p>
+                <div class="service-tags">
+                    <span class="tag">Infrastructure</span>
+                    <span class="tag">Curriculum</span>
+                    <span class="tag">Equipment</span>
+                    <span class="tag">Faculty Training</span>
+                </div>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">📱</div>
+                <h3>Mobile Development</h3>
+                <p>
+                    Cross-platform mobile apps for Android and iOS. Unity-based development 
+                    with native features and smooth App Store publishing.
+                </p>
+                <div class="service-tags">
+                    <span class="tag">Android</span>
+                    <span class="tag">iOS</span>
+                    <span class="tag">Unity Mobile</span>
+                    <span class="tag">Publishing</span>
+                </div>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">⚡</div>
+                <h3>Technical Consulting</h3>
+                <p>
+                    Expert guidance on architecture, optimization, and workflows. 
+                    Code reviews, performance tuning, and strategic technical advice.
+                </p>
+                <div class="service-tags">
+                    <span class="tag">Architecture</span>
+                    <span class="tag">Optimization</span>
+                    <span class="tag">Code Review</span>
+                    <span class="tag">Strategy</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio">
+        <div class="section-header fade-in">
+            <span class="section-badge">Our Work</span>
+            <h2 class="section-title">Featured Projects</h2>
+            <p class="section-subtitle">
+                A showcase of innovative projects that push the boundaries of interactive technology
+            </p>
+        </div>
+        
+        <div class="portfolio-grid">
+            <div class="portfolio-card fade-in">
+                <div class="portfolio-visual">
+                    <div class="portfolio-pattern"></div>
+                    <div class="portfolio-icon">🏎️</div>
+                    <div class="portfolio-badge">Game Development</div>
+                </div>
+                <div class="portfolio-content">
+                    <h4>Velocity Rush</h4>
+                    <p>
+                        High-speed multiplayer racing game with realistic physics, weather systems, 
+                        and cross-platform leaderboards.
+                    </p>
+                    <div class="portfolio-meta">
+                        <span>⚡ Unity 3D</span>
+                        <span>🎮 Multiplayer</span>
+                        <span>📱 PC/Mobile</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-card fade-in">
+                <div class="portfolio-visual">
+                    <div class="portfolio-pattern"></div>
+                    <div class="portfolio-icon">🥽</div>
+                    <div class="portfolio-badge">VR Training</div>
+                </div>
+                <div class="portfolio-content">
+                    <h4>SafetyPro VR</h4>
+                    <p>
+                        Enterprise VR training simulator for industrial safety with hand tracking 
+                        and realistic scenario simulation.
+                    </p>
+                    <div class="portfolio-meta">
+                        <span>🥽 Meta Quest</span>
+                        <span>🏢 Enterprise</span>
+                        <span>📊 Analytics</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-card fade-in">
+                <div class="portfolio-visual">
+                    <div class="portfolio-pattern"></div>
+                    <div class="portfolio-icon">📚</div>
+                    <div class="portfolio-badge">AR Education</div>
+                </div>
+                <div class="portfolio-content">
+                    <h4>EduVerse AR</h4>
+                    <p>
+                        Interactive AR learning platform with 3D models, animations, 
+                        and gamified educational content for students.
+                    </p>
+                    <div class="portfolio-meta">
+                        <span>📱 ARCore/ARKit</span>
+                        <span>🎓 Education</span>
+                        <span>🌐 Cross-Platform</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-card fade-in">
+                <div class="portfolio-visual">
+                    <div class="portfolio-pattern"></div>
+                    <div class="portfolio-icon">💎</div>
+                    <div class="portfolio-badge">Mobile Game</div>
+                </div>
+                <div class="portfolio-content">
+                    <h4>Crystal Quest</h4>
+                    <p>
+                        Award-winning puzzle adventure with 250+ levels, stunning effects, 
+                        and 750K+ downloads across app stores.
+                    </p>
+                    <div class="portfolio-meta">
+                        <span>📱 Mobile</span>
+                        <span>🎨 2D/3D Hybrid</span>
+                        <span>⭐ 750K+ Downloads</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-card fade-in">
+                <div class="portfolio-visual">
+                    <div class="portfolio-pattern"></div>
+                    <div class="portfolio-icon">🏛️</div>
+                    <div class="portfolio-badge">AR/MR Solution</div>
+                </div>
+                <div class="portfolio-content">
+                    <h4>Heritage Explorer</h4>
+                    <p>
+                        AR museum guide with marker-based tracking, 3D artifact reconstruction, 
+                        and multi-language audio tours.
+                    </p>
+                    <div class="portfolio-meta">
+                        <span>🔍 Vuforia</span>
+                        <span>🏛️ Cultural</span>
+                        <span>🌍 Multi-Language</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-card fade-in">
+                <div class="portfolio-visual">
+                    <div class="portfolio-pattern"></div>
+                    <div class="portfolio-icon">⚔️</div>
+                    <div class="portfolio-badge">Multiplayer Game</div>
+                </div>
+                <div class="portfolio-content">
+                    <h4>Arena Champions</h4>
+                    <p>
+                        Real-time multiplayer arena game with character customization, 
+                        seasonal tournaments, and esports-ready features.
+                    </p>
+                    <div class="portfolio-meta">
+                        <span>🎮 Multiplayer</span>
+                        <span>⚔️ PvP</span>
+                        <span>🏆 Esports Ready</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="section-header fade-in">
+            <span class="section-badge">Who We Are</span>
+            <h2 class="section-title">About LevelUp Tech Labs</h2>
+        </div>
+        
+        <div class="about-container">
+            <div class="about-visual fade-in">
+                <div class="about-shape"></div>
+            </div>
+            <div class="about-content fade-in">
+                <h3>A Decade of Innovation</h3>
+                <p>
+                    Founded on 10+ years of Unity 3D expertise, LevelUp Tech Labs is where creativity 
+                    meets cutting-edge technology. We're passionate creators, engineers, and innovators 
+                    who live and breathe immersive experiences.
+                </p>
+                <p>
+                    From indie game studios to Fortune 500 companies, educational institutions to 
+                    healthcare providers — our work spans industries and changes how people interact 
+                    with technology.
+                </p>
+                <p>
+                    We don't just build software. We craft experiences that inspire, educate, and 
+                    transform. Every project is an opportunity to push boundaries and set new standards.
+                </p>
+
+                <div class="expertise-grid">
+                    <div class="expertise-item">
+                        <h4>10+ Years</h4>
+                        <p>Unity 3D Development Experience</p>
+                    </div>
+                    <div class="expertise-item">
+                        <h4>150+ Projects</h4>
+                        <p>Successfully Delivered</p>
+                    </div>
+                    <div class="expertise-item">
+                        <h4>75+ Clients</h4>
+                        <p>Satisfied Worldwide</p>
+                    </div>
+                    <div class="expertise-item">
+                        <h4>24/7 Support</h4>
+                        <p>Always Here To Help</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="section-header fade-in">
+            <span class="section-badge">Get In Touch</span>
+            <h2 class="section-title">Let's Create Something Amazing</h2>
+            <p class="section-subtitle">
+                Ready to transform your vision into reality? We're here to help.
+            </p>
+        </div>
+        
+        <div class="contact-wrapper fade-in">
+            <div class="contact-info">
+                <h3>Contact Information</h3>
+                <p>
+                    Whether you have a project in mind, need expert guidance, or want to explore 
+                    our training programs — we'd love to hear from you.
+                </p>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📍</div>
+                    <div class="contact-details">
+                        <h4>Location</h4>
+                        <p>Hyderabad, Telangana, India</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📧</div>
+                    <div class="contact-details">
+                        <h4>Email</h4>
+                        <p>leveluptechlabs@gmail.com</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📱</div>
+                    <div class="contact-details">
+                        <h4>Phone</h4>
+                        <p>+91 8179208241</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <form id="contactForm">
+                    <input type="hidden" name="access_key" value="8c3d5912-6e42-45bc-bd8e-fc5b099b62b2">
+                    <input type="hidden" name="subject" value="New Enquiry - LevelUp Tech Labs Website">
+                    <input type="hidden" name="from_name" value="LevelUp Tech Labs Website">
+                    <input type="checkbox" name="botcheck" style="display:none;">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" placeholder="Your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="text" id="phone" name="phone" placeholder="Your phone number">
+                    </div>
+                    <div class="form-group">
+                        <label for="service">Service Required</label>
+                        <input type="text" id="service" name="service" placeholder="e.g., Game Development, AR/VR">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Project Details *</label>
+                        <textarea id="message" name="message" placeholder="Tell us about your project..." required></textarea>
+                    </div>
+                    <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                    <div id="formResult" style="margin-top:1rem;text-align:center;font-weight:600;display:none;"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">LevelUp Tech Labs</div>
+            <p class="footer-text">
+                Transforming visions into immersive realities through Unity 3D, AR/VR/MR, 
+                professional training, and mobile development excellence.
+            </p>
+            <div class="footer-links">
+                <a href="#">LinkedIn</a>
+                <a href="#">GitHub</a>
+                <a href="#">Instagram</a>
+                <a href="#">YouTube</a>
+                <a href="#">Twitter</a>
+            </div>
+            <p class="copyright">© 2024 LevelUp Tech Labs. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Scroll Fade-In
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -80px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Toast Notification Helper
+        function showToast(type, message) {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const text = document.getElementById('toastText');
+            toast.className = 'toast ' + type;
+            icon.textContent = type === 'success' ? '✅' : '❌';
+            text.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 5000);
+        }
+
+        // Web3Forms Contact Form Submission
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            const data = Object.fromEntries(new FormData(this));
+            try {
+                const res = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const json = await res.json();
+                if (json.success) {
+                    showToast('success', 'Message sent successfully! We will get back to you soon.');
+                    this.reset();
+                } else {
+                    showToast('error', 'Something went wrong. Please try again or email leveluptechlabs@gmail.com');
+                }
+            } catch(err) {
+                showToast('error', 'Network error. Please email us at leveluptechlabs@gmail.com');
+            }
+            btn.disabled = false;
+            btn.textContent = 'Send Message';
+        });
+    </script>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-icon" id="toastIcon"></span>
+        <span class="toast-text" id="toastText"></span>
+    </div>
+
+</body>
+</html>
